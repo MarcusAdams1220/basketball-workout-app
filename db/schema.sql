@@ -34,3 +34,18 @@ VALUES
 ('Slide By Finishes', 'finishing', 'https://youtu.be/Lq8MliAM6u8', 'Make 10 layups each side (alternating options on each rep)'),
 ('Euro Step Options', 'finishing', 'https://youtu.be/8mIR2TB5YtU', 'Make 10 layups each side (alternating options on each rep)'),
 ('Floater Options', 'finishing', 'https://youtu.be/Je8Tj8pYmwU', 'Make 10 layups each side (alternating options on each rep)');
+
+SELECT DISTINCT ON (category) *
+  FROM (SELECT * FROM drills ORDER BY random()) t
+  WHERE category = 'shooting'
+  OR category = 'finishing'
+  OR category = 'ball handling';
+-- DISTINCT ON returns one row from each category
+
+
+SELECT *
+FROM (SELECT * FROM drills ORDER BY random()) t
+WHERE category = 'shooting'
+  OR category = 'finishing'
+  OR category = 'ball handling'
+LIMIT 3;

@@ -1,29 +1,16 @@
 const db = require('../db/db')
 
 const Drill = {
-
-  findAll: () => {
-    const sql = 'SELECT * FROM drills'
+  findThreeDrills: (shooting, finishing, ballHandling) => {
+    const sql = "SELECT DISTINCT ON (category) * FROM (SELECT * FROM drills ORDER BY random()) t WHERE category = $1 OR category = $2 OR category = $3"
     return db
-      .query(sql)
+      .query(sql, [shooting, finishing, ballHandling])
       .then(dbRes => dbRes.rows)
   },
-  findShooting: () => {
-    const sql = "SELECT * FROM drills WHERE category = 'shooting'"
+  findWorkout: (shooting, finishing, ballHandling, numOfDrills) => {
+    const sql = "SELECT * FROM (SELECT * FROM drills ORDER BY random()) t WHERE category = $1 OR category = $2 OR category = $3 LIMIT $4"
     return db
-      .query(sql)
-      .then(dbRes => dbRes.rows)
-  },
-  findFinishing: () => {
-    const sql = "SELECT * FROM drills WHERE category = 'finishing'"
-    return db
-      .query(sql)
-      .then(dbRes => dbRes.rows)
-  },
-  findBallHandling: () => {
-    const sql = "SELECT * FROM drills WHERE category = 'ball handling'"
-    return db
-      .query(sql)
+      .query(sql, [shooting, finishing, ballHandling, numOfDrills])
       .then(dbRes => dbRes.rows)
   }
 }

@@ -7,6 +7,27 @@ app.listen(port, () => console.log(`Listening on port: ${port}`))
 
 app.use(express.json())
 
+app.get('/api/drills/:data', (req, res) => {
+  const params = req.params
+  const data = params.data.split('-')
+  const shooting = data[data.indexOf('shooting')]
+  const finishing = data[data.indexOf('finishing')]
+  const ballHandling = data[data.indexOf('ball handling')]
+  const numOfDrills = data[data.length-1] / 5
+
+  if (numOfDrills === 3 && shooting && ballHandling && finishing) {
+    Drill
+    .findThreeDrills(shooting, finishing, ballHandling)
+    .then(drills => res.json(drills))
+    
+  } else {
+    Drill
+    .findWorkout(shooting, finishing, ballHandling, numOfDrills)
+    .then(drills => res.json(drills))
+  }
+
+  
+})
 app.get('/api/drills/shooting', (req, res) => {
   Drill
     .findShooting()
