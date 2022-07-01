@@ -1,6 +1,12 @@
 CREATE DATABASE basketball_workout_app;
 \c basketball_workout_app
 
+CREATE TABLE users(
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  email TEXT,
+  password_digest TEXT
+);
 
 CREATE TABLE drills(
   id SERIAL PRIMARY KEY,
@@ -35,22 +41,14 @@ VALUES
 ('Euro Step Options', 'finishing', 'https://youtu.be/8mIR2TB5YtU', 'Make 10 layups each side (alternating options on each rep)'),
 ('Floater Options', 'finishing', 'https://youtu.be/Je8Tj8pYmwU', 'Make 10 layups each side (alternating options on each rep)');
 
+
+-- DO NOT RUN: Queries To Access Workout Data In Drill.js
 SELECT DISTINCT ON (category) *
   FROM (SELECT * FROM drills ORDER BY random()) t
   WHERE category = 'shooting'
   OR category = 'finishing'
   OR category = 'ball handling';
--- DISTINCT ON returns one row from each category
 
-
-SELECT *
-FROM (SELECT * FROM drills ORDER BY random()) t
-WHERE category = 'shooting'
-  OR category = 'finishing'
-  OR category = 'ball handling'
-LIMIT 3;
--- When 2 categories are selected for a 15 min workout, it sometimes returns drills from only 1 category
--- Solution: Separate query for each if/else condition
 (SELECT * FROM drills WHERE category = 'shooting' ORDER BY random() LIMIT 2)
 UNION
 (SELECT * FROM drills WHERE category = 'finishing' ORDER BY random() LIMIT 1);
