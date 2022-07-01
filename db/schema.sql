@@ -49,3 +49,8 @@ WHERE category = 'shooting'
   OR category = 'finishing'
   OR category = 'ball handling'
 LIMIT 3;
+-- When 2 categories are selected for a 15 min workout, it sometimes returns drills from only 1 category
+-- Solution: Separate query for each if/else condition
+(SELECT * FROM drills WHERE category = 'shooting' ORDER BY random() LIMIT 2)
+UNION
+(SELECT * FROM drills WHERE category = 'finishing' ORDER BY random() LIMIT 1);

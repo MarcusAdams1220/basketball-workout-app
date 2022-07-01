@@ -10,36 +10,36 @@ app.use(express.json())
 app.get('/api/drills/:data', (req, res) => {
   const params = req.params
   const data = params.data.split('-')
-  const shooting = data[data.indexOf('shooting')]
-  const finishing = data[data.indexOf('finishing')]
-  const ballHandling = data[data.indexOf('ball handling')]
-  const numOfDrills = data[data.length-1] / 5
-
-  if (numOfDrills === 3 && shooting && ballHandling && finishing) {
-    Drill
-    .findThreeDrills(shooting, finishing, ballHandling)
-    .then(drills => res.json(drills))
-    
+  let firstSkill
+  let secondSkill
+  let thirdSkill
+  let numOfDrills
+  if (data.length === 4) {
+    firstSkill = data[0]
+    secondSkill = data[1]
+    thirdSkill = data[2]
+    numOfDrills = data[3] / 5
+  } else if (data.length === 3) {
+    firstSkill = data[0]
+    secondSkill = data[1]
+    numOfDrills = data[2] / 5
   } else {
-    Drill
-    .findWorkout(shooting, finishing, ballHandling, numOfDrills)
-    .then(drills => res.json(drills))
+    firstSkill = data[0]
+    numOfDrills = data[1] / 5
   }
 
-  
-})
-app.get('/api/drills/shooting', (req, res) => {
-  Drill
-    .findShooting()
-    .then(shootingDrills => res.json(shootingDrills))
-})
-app.get('/api/drills/finishing', (req, res) => {
-  Drill
-    .findFinishing()
-    .then(finishingdDrills => res.json(finishingdDrills))
-})
-app.get('/api/drills/ball%20handling', (req, res) => {
-  Drill
-    .findBallHandling()
-    .then(ballHandlingDrills => res.json(ballHandlingDrills))
+  if (numOfDrills === 3 && firstSkill && secondSkill && thirdSkill) {
+    Drill
+      .find15MinWorkoutFrom3Categories(firstSkill, secondSkill, thirdSkill)
+      .then(drills => res.json(drills))
+    
+  } else if (numOfDrills === 3 && firstSkill && secondSkill) {
+    Drill
+      .find15MinWorkoutFrom2Categories(firstSkill, secondSkill)
+      .then(drills => res.json(drills))
+  } else {
+    Drill
+      .findWorkout(firstSkill, secondSkill, thirdSkill, numOfDrills)
+      .then(drills => res.json(drills))
+  }
 })

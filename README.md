@@ -1,6 +1,6 @@
 # basketball-workout-app.
 
-# Challenging Problem:
+## Code That I'm Proud Of:
 SELECT DISTINCT ON (category) *
   FROM (SELECT * FROM drills ORDER BY random()) t
   WHERE category = 'shooting'
