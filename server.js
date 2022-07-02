@@ -1,6 +1,5 @@
 const { json } = require('body-parser')
 const express = require('express')
-const sessions = require('./middlewares/sessions')
 const app = express()
 const port = 4567
 const Drill = require('./models/drill')
@@ -10,8 +9,6 @@ const bcrypt = require('bcrypt')
 app.listen(port, () => console.log(`Listening on port: ${port}`))
 
 app.use(express.json())
-
-app.use(sessions)
 
 app.get('/api/drills/:data', (req, res) => {
   const params = req.params
@@ -54,8 +51,16 @@ app.post('/signup', (req, res) => {
   const { name, email, password} = req.body
   const password_digest = bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
   User
-    .create(name, email, password_digest)
-    .then(user => res.json(user))
+    .findByEmail(email)
+    .then(user => {
+      if (user) {
+        res.status(400).json({error: 'User Already Exists'})
+      } else {
+        User
+          .create(name, email, password_digest)
+          .then(user => res.json(user))
+      }
+    })
 })
 
 app.post('/login', (req, res) => {
@@ -63,10 +68,15 @@ app.post('/login', (req, res) => {
   User
     .findByEmail(email)
     .then(user => {
-      const isValidPassword = bcrypt.compareSync(password, user.password_digest)
-      if (user && isValidPassword) {
-        req.session.userId = user.id
-        res.json(user.name)
+      if (!user) {
+        res.json({error: 'This user does not exist'})
+      } else {
+        const isValidPassword = bcrypt.compareSync(password, user.password_digest)
+        if (user && isValidPassword) {
+          res.json(user)
+        } else {
+          res.json({error: 'The password you entered is incorrect'})
+        }
       }
     })
 })
