@@ -54,7 +54,7 @@ app.post('/signup', (req, res) => {
     .findByEmail(email)
     .then(user => {
       if (user) {
-        res.status(400).json({error: 'User Already Exists'})
+        res.status(400).json({error: '🚨 User Already Exists'})
       } else {
         User
           .create(name, email, password_digest)
@@ -69,14 +69,20 @@ app.post('/login', (req, res) => {
     .findByEmail(email)
     .then(user => {
       if (!user) {
-        res.json({error: 'This user does not exist'})
+        res.json({error: '🚫 This user does not exist'})
       } else {
         const isValidPassword = bcrypt.compareSync(password, user.password_digest)
         if (user && isValidPassword) {
           res.json(user)
         } else {
-          res.json({error: 'The password you entered is incorrect'})
+          res.json({error: '🙅‍♂️ The password you entered is incorrect'})
         }
       }
     })
+})
+
+app.post('/like/:drill', (req, res) => {
+  const drill = req.params
+  const { category, title, video_url, instructions } = drill
+  console.log(category)
 })
