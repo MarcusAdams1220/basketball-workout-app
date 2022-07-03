@@ -1,7 +1,7 @@
 const { json } = require('body-parser')
 const express = require('express')
 const app = express()
-port = process.env.PORT || 4567;
+const port = process.env.PORT || 4567;
 const Drill = require('./models/drill')
 const User = require('./models/user')
 const bcrypt = require('bcrypt')
