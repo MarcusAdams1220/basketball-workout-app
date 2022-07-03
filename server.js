@@ -1,7 +1,7 @@
 const { json } = require('body-parser')
 const express = require('express')
 const app = express()
-const port = 4567
+port = process.env.PORT || 4567;
 const Drill = require('./models/drill')
 const User = require('./models/user')
 const bcrypt = require('bcrypt')
@@ -86,3 +86,12 @@ app.post('/like/:drill', (req, res) => {
   const { category, title, video_url, instructions } = drill
   console.log(category)
 })
+
+if (process.env.NODE_ENV === 'production') {
+  const path = require('path')
+  app.use(express.static(path.join(__dirname, 'build')));
+
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
+}
