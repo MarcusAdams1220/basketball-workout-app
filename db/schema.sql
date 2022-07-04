@@ -16,6 +16,17 @@ CREATE TABLE drills(
   instructions TEXT
 );
 
+CREATE TABLE workouts(
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER,
+  workout_id INTEGER,
+  workout_duration INTEGER,
+  drill_title TEXT,
+  drill_category TEXT,
+  drill_video_url TEXT,
+  drill_instructions TEXT
+);
+
 INSERT INTO drills(title, category, video_url, instructions)
 VALUES
 ('Wing Lift', 'shooting', 'https://youtu.be/I0dxw9smZ7k', 'Make 10 shots from the right wing & 10 shots from the left wing'),
@@ -45,7 +56,7 @@ VALUES
 ('Floater Options', 'finishing', 'https://youtu.be/Je8Tj8pYmwU', 'Make 10 layups each side (alternating options on each rep)');
 
 
--- DO NOT RUN: Queries To Access Workout Data In Drill.js
+-- Queries To Access Workout Data In Drill.js
 SELECT DISTINCT ON (category) *
   FROM (SELECT * FROM drills ORDER BY random()) t
   WHERE category = 'shooting'
@@ -55,3 +66,7 @@ SELECT DISTINCT ON (category) *
 (SELECT * FROM drills WHERE category = 'shooting' ORDER BY random() LIMIT 2)
 UNION
 (SELECT * FROM drills WHERE category = 'finishing' ORDER BY random() LIMIT 1);
+
+-- Query to access latest workout_id for the given user
+SELECT MAX(workout_id)
+FROM (SELECT * FROM workouts WHERE user_id = 6) t;

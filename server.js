@@ -78,7 +78,6 @@ app.post('/login', (req, res) => {
         const isValidPassword = bcrypt.compareSync(password, user.password_digest)
         if (user && isValidPassword) {
           req.session.userId = user.id
-          console.log(req.session.userId)
           res.json(user)
         } else {
           res.json({error: '🙅‍♂️ The password you entered is incorrect'})
@@ -87,7 +86,31 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.post('/save-workout', (req, res) => {
+app.put('/logout', (req, res) => {
+  req.session.destroy()
+})
+
+app.post('/workout/:duration', (req, res) => {
+  // Use req.body.length to store the number of drills
+  const drills = req.body
+  const duration = req.params.duration
+  const userId = req.session.userId
+  Workout
+    .findLatestWorkout(userId)
+    .then(latestWorkoutId => {
+      latestWorkoutId += 1
+      drills.forEach (drill => {
+        Workout
+          .add(userId, latestWorkoutId, duration, drill.title, drill.category, drill.video_url, drill.instructions)
+      })
+    })
+})
+
+app.get('/user/:id', (req, res) => {
+  const userId = req.params.id
+  Workout
+    .findAll(userId)
+    .then(workouts => res.json(workouts))
 
 })
 
