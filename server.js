@@ -2,6 +2,7 @@ const { json } = require('body-parser')
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 4567;
+const sessions = require('./middlewares/sessions')
 const Drill = require('./models/drill')
 const Workout = require('./models/workout')
 const User = require('./models/user')
@@ -10,6 +11,8 @@ const bcrypt = require('bcrypt')
 app.listen(port, () => console.log(`Listening on port: ${port}`))
 
 app.use(express.json())
+
+app.use(sessions)
 
 app.get('/api/drills/:data', (req, res) => {
   const params = req.params
@@ -74,12 +77,18 @@ app.post('/login', (req, res) => {
       } else {
         const isValidPassword = bcrypt.compareSync(password, user.password_digest)
         if (user && isValidPassword) {
+          req.session.userId = user.id
+          console.log(req.session.userId)
           res.json(user)
         } else {
           res.json({error: '🙅‍♂️ The password you entered is incorrect'})
         }
       }
     })
+})
+
+app.post('/save-workout', (req, res) => {
+
 })
 
 const path = require('path')
