@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 4567;
 const Drill = require('./models/drill')
+const Workout = require('./models/workout')
 const User = require('./models/user')
 const bcrypt = require('bcrypt')
 
@@ -80,13 +81,6 @@ app.post('/login', (req, res) => {
       }
     })
 })
-
-app.post('/like/:drill', (req, res) => {
-  const drill = req.params
-  const { category, title, video_url, instructions } = drill
-  console.log(category)
-})
-
 
 const path = require('path')
 app.use(express.static(path.join(__dirname, './build')));
