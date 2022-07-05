@@ -111,7 +111,14 @@ app.get('/user/:id', (req, res) => {
   Workout
     .findAll(userId)
     .then(workouts => res.json(workouts))
+})
 
+app.get('/session', (req, res) => {
+  if (req.session.userId) {
+    User
+      .findById(req.session.userId)
+      .then(user => res.json(user))
+  }
 })
 
 const path = require('path')
