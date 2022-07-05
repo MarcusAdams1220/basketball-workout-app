@@ -58,10 +58,10 @@ VALUES
 
 -- Queries To Access Workout Data In Drill.js
 SELECT DISTINCT ON (category) *
-  FROM (SELECT * FROM drills ORDER BY random()) t
-  WHERE category = 'shooting'
-  OR category = 'finishing'
-  OR category = 'ball handling';
+FROM (SELECT * FROM drills ORDER BY random()) t
+WHERE category = 'shooting'
+OR category = 'finishing'
+OR category = 'ball handling';
 
 (SELECT * FROM drills WHERE category = 'shooting' ORDER BY random() LIMIT 2)
 UNION
